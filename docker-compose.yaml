@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  minio1:
+    image: minio/minio:latest
+    container_name: minio1
+    ports:
+      - "9001:9001"
+      - "9100:9000"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio1-data:/data
+    command: server --address ":9000" --console-address ":9001" http://minio{1...4}/data
+
+  minio2:
+    image: minio/minio:latest
+    container_name: minio2
+    ports:
+      - "9002:9002"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio2-data:/data
+    command: server --address ":9000" --console-address ":9002" http://minio{1...4}/data
+
+  minio3:
+    image: minio/minio:latest
+    container_name: minio3
+    ports:
+      - "9003:9003"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio3-data:/data
+    command: server --address ":9000" --console-address ":9003" http://minio{1...4}/data
+
+  minio4:
+    image: minio/minio:latest
+    container_name: minio4
+    ports:
+      - "9004:9004"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio4-data:/data
+    command: server --address ":9000" --console-address ":9004" http://minio{1...4}/data
+
+  debian-benchmark:
+    image: de-bpn-benchmark-minio:v1  
+    container_name: ubuntu
+    tty: true
+    command: tail -f /dev/null
+  #  warp mixed --host=minio{1...4}:9000 --access-key=minioadmin --secret-key=minioadmin --autoterm
+
+volumes:
+  minio1-data:
+  minio2-data:
+  minio3-data:
+  minio4-data:
